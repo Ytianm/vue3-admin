@@ -1,26 +1,24 @@
 <template>
-  <el-menu
-    default-active="1"
-  >
+  <el-menu default-active="1">
     <div v-for="(menu, mIndex) in menuList" :key="menu.path">
       <el-submenu
         :index="mIndex + 1 + ''"
         v-if="menu.children && menu.children.length > 0"
       >
         <template #title>
-          <i class="el-icon-location"></i>
+          <i :class="menu.icon"></i>
           <span>{{ menu.name }}</span>
         </template>
         <el-menu-item
           v-for="(sub, sIndex) in menu.children"
-          :index="(mIndex + 1) + '-' + (sIndex + 1) + ''"
+          :index="mIndex + 1 + '-' + (sIndex + 1) + ''"
           :key="sub.path"
           @click="handleSelect(sub)"
         >
-          <span style="padding-left:40px">{{ sub.name }}</span>
+          <span style="padding-left: 40px">{{ sub.name }}</span>
         </el-menu-item>
       </el-submenu>
-      <el-menu-item v-else :index="mIndex + 1 + ''"  @click="handleSelect(menu)">
+      <el-menu-item v-else :index="mIndex + 1 + ''" @click="handleSelect(menu)">
         <i :class="menu.icon"></i>
         <template #title>{{ menu.name }}</template>
       </el-menu-item>
@@ -30,32 +28,37 @@
 
 <script>
 import { reactive } from 'vue'
-import { useRouter } from 'vue-router';
+import { useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
 export default {
   setup () {
     const router = useRouter()
     const menuList = reactive([
       {
-        name: '导航1',
+        name: '用户信息',
         path: 'home',
-        icon: 'el-icon-menu'
+        icon: 'el-icon-user'
       },
       {
-        name: '导航2',
-        path: 'document',
-        icon: 'el-icon-document',
-        children: [
-          {
-            name: '导航2-1',
-            path: 'document',
-            icon: 'el-icon-menu'
-          },
-        ]
+        name: '工时管理',
+        path: 'work-hours',
+        icon: 'el-icon-s-data'
+      },
+      {
+        name: '账务管理',
+        path: '',
+        icon: 'el-icon-s-finance'
       }
     ])
 
     // 菜单选中
-    const handleSelect = (m) => { 
+    const handleSelect = (m) => {
+      if (!m.path) {
+        ElMessage({
+          message: '暂未开通',
+          center: true
+        })
+      }
       router.push(m.path)
     }
 

@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <el-header>Header</el-header>
+    <el-header>工时管理系统</el-header>
     <el-container>
       <el-aside width="200px">
         <Menus />
@@ -29,8 +29,12 @@ export default {
 .el-header,
 .el-footer {
   background-color: #b3c0d1;
-  color: #333;
+  color: #fff;
   line-height: 60px;
+}
+
+.el-header{
+  font-size: 20px;
 }
 
 .el-aside {
@@ -45,7 +49,6 @@ export default {
 .el-main {
   background-color: #fff;
   color: #333;
-  text-align: center;
   margin: 15px;
 }
 </style>
