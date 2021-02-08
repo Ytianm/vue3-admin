@@ -32,8 +32,6 @@ import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 export default {
   setup () {
-          const { ctx } = getCurrentInstance()
-      console.log('--------log--------', ctx)
     let currentPath = ref('home')
     const router = useRouter()
     const menuList = reactive([
