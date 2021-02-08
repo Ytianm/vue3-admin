@@ -1,8 +1,8 @@
 <template>
-  <el-menu default-active="1">
-    <div v-for="(menu, mIndex) in menuList" :key="menu.path">
+  <el-menu :default-active="currentPath">
+    <div v-for="(menu) in menuList" :key="menu.path">
       <el-submenu
-        :index="mIndex + 1 + ''"
+        :index="menu.path"
         v-if="menu.children && menu.children.length > 0"
       >
         <template #title>
@@ -10,15 +10,15 @@
           <span>{{ menu.name }}</span>
         </template>
         <el-menu-item
-          v-for="(sub, sIndex) in menu.children"
-          :index="mIndex + 1 + '-' + (sIndex + 1) + ''"
+          v-for="(sub) in menu.children"
+          :index="sub.path"
           :key="sub.path"
           @click="handleSelect(sub)"
         >
           <span style="padding-left: 40px">{{ sub.name }}</span>
         </el-menu-item>
       </el-submenu>
-      <el-menu-item v-else :index="mIndex + 1 + ''" @click="handleSelect(menu)">
+      <el-menu-item v-else :index="menu.path" @click="handleSelect(menu)">
         <i :class="menu.icon"></i>
         <template #title>{{ menu.name }}</template>
       </el-menu-item>
@@ -27,11 +27,14 @@
 </template>
 
 <script>
-import { reactive } from 'vue'
+import { ref, reactive, getCurrentInstance, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 export default {
   setup () {
+          const { ctx } = getCurrentInstance()
+      console.log('--------log--------', ctx)
+    let currentPath = ref('home')
     const router = useRouter()
     const menuList = reactive([
       {
@@ -51,6 +54,12 @@ export default {
       }
     ])
 
+    onMounted(() => {
+      const { ctx } = getCurrentInstance()
+      const path = ctx.$router.currentRoute.value.path
+      currentPath.value = path.substr(1)
+    })
+
     // 菜单选中
     const handleSelect = (m) => {
       if (!m.path) {
@@ -59,12 +68,14 @@ export default {
           center: true
         })
       }
+      currentPath.value = m.path
       router.push(m.path)
     }
 
     return {
       menuList,
-      handleSelect
+      handleSelect,
+      currentPath
     }
   }
 }
